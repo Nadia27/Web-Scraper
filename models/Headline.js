@@ -7,15 +7,13 @@ var Schema = mongoose.Schema;
 // This is similar to a Sequelize model
 var HeadlineSchema = new Schema({
     // `headline` must be of type String
-    headline: {
+    title: {
         type: String,
-        unique: true,
         required: true  
     }, 
     // `url` must be of type String
     url:{
         type: String,
-        unique: true,
         required: true
     }, 
     // `note` is an object that stores a Note id
