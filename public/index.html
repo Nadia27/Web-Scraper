@@ -7,6 +7,7 @@
     <!--Bootsrap-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
     crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>Web Scraper</title>
 </head>
 <body>
@@ -25,11 +26,21 @@
     </p>
 </div>
 
-<div class="container" id="scrape-results">
-    <!--Scraped News Goes Here-->
-    
+<table id="results">
+    <thead>
+        <tr>
+            <th id="headlines-title">Headline</th>
+            <th id="headline-url">Web Address</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Results from DB here -->
+    </tbody>
+</table>
 </div>
-</div>
+
+<script src="app.js"></script>
     
 </body>
 </html>
