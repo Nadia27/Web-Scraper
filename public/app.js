@@ -3,10 +3,16 @@
 function displayResults(data) {
     // Add to the table here...
     //empty first!
-    $("tbody").empty();
+    //$("card").empty();
     data.forEach(function (headline) {
-        $("tbody").append(`<tr><td>${headline.title}</td><td>${headline.url}</td></tr>`);
+        $(".card").append(`<div class="card"><div class="card-header">Featured Headline:</div><div class="card-body"><h5 class="card-title title">${headline.title}</h5><p class="card-text url">${headline.url}</p><a href="#" class="btn btn-primary">Save Article</a></div></div>`);
     });
+
+
+
+
+
+<!-- <table id="results">
 }
 
 $("#scrape").on("click", function () {
@@ -16,8 +22,4 @@ $("#scrape").on("click", function () {
         displayResults(data);
     });
 });
-/* // First thing: ask the back end for json with all animals
-$.getJSON("/scrape", function (data) {
-    // Call our function to generate a table body
-    displayResults(data);
-}); */
+
