@@ -16,6 +16,10 @@ var HeadlineSchema = new Schema({
         type: String,
         required: true
     }, 
+    saved: {
+        type: Boolean, 
+        default: false
+    }, 
     // `note` is an object that stores a Note id
     // The ref property links the ObjectId to the Note model
     // This allows to populate the Headline with an associated Note 
