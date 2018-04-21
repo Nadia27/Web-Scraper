@@ -1,26 +1,26 @@
 //
 //Dependencies=====================================
-var express = require("express");  
-var bodyParser = require("body-parser"); 
+var express = require("express");
+var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
-var logger = require("morgan");  
-var request = require("request"); 
+var logger = require("morgan");
+var request = require("request");
 //==================================================
 
 //
 //Scraping=========================================
 //Axios promised based http library
-var axios = require("axios"); 
-var cheerio = require("cheerio"); 
+var axios = require("axios");
+var cheerio = require("cheerio");
 
 //
 //Require models ==========================================
- var db = require("./models");  
+var db = require("./models");
 
-var PORT = 3001; 
+var PORT = 3001;
 
 //intialize Express 
-var app = express(); 
+var app = express();
 
 // Set the app up with morgan.
 // morgan is used to log our HTTP Requests.
@@ -40,9 +40,9 @@ app.use(express.static("public"));
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/mongoHeadlines"); 
-// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+mongoose.connect("mongodb://localhost/mongoresults");
+// If deployed, use the deployed database. Otherwise use the local mongoresults database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoresults";
 
 
 
@@ -51,10 +51,10 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 // Simple index.html route
 app.get("/", function (req, res) {
     res.send(index.html);
-}); 
+});
 
 
-//Scrape Stories for New Site 
+//Scrape Stories from Good News Site 
 // A GET route for scraping the goodnews website
 app.get('/scrape', function (req, res) {
     // First, we grab the body of the html with request
@@ -64,8 +64,8 @@ app.get('/scrape', function (req, res) {
             // Then, we load that into cheerio and save it to $ for a shorthand selector
             const $ = cheerio.load(response.data);
 
-            // The list of headlines that need to be saved.
-            const headlines = [];
+            // The list of results that need to be saved.
+            const results = [];
 
             // Now, we grab every h2 within an article tag, and do the following:
             $('h3.td-module-title').each(function (i, element) {
@@ -78,48 +78,72 @@ app.get('/scrape', function (req, res) {
                 headline.url = $(this).children().attr('href');
 
                 // Check to see if headline already exists in the array
-                if (!headlines.some(h => h.title === headline.title)) {
-                    // Add the headline to the `headlines` array
-                    headlines.push(headline);
+                if (!results.some(h => h.title === headline.title)) {
+                    // Add the headline to the `results` array
+                    results.push(headline);
                 }
             });
 
-            console.log(headlines);
-
-            // Remove all headlines that exist
-            db.Headline.remove()
+            console.log(results);
+            //Now that I have the scraped headlines...put into db
+             // Remove all headlines that exist
+                db.Headline.remove()
                 .then(() => {
                     // Insert the new headlines
-                    db.Headline.insertMany(headlines)
-                        .then(() => {
-                            // Get the new headlines
-                            db.Headline.find()
-                                // Return the new headlines
-                                .then(docs => res.json(docs))
+            db.Headline.insertMany(results)
+                .then(() => {
+                    console.log(results); 
+                }).catch(function(err){
+                    return res.json(err);
+                });
+                res.send("Scrape Complete");
+                    // Get the new headlines
+                    /* db.Headline.find()
+                        // Return the new headlines
+                        .then(docs => res.json(docs))
+    
+                        // There was an error getting the headlines
+                        .catch(err => res.status(500).json(err)); */
+                });
+    
+    
+    });
+        }); 
 
-                                // There was an error getting the headlines
-                                .catch(err => res.status(500).json(err));
-                        })
 
-                        // There was an error inserting the new headlines
-                        .catch(err => res.status(500).json(err));
-                })
+// Getting the articles we scraped from the mongoDB
+app.get("/articles", function (req, res) {
+    // grab every doc in the Articles array
+    // Get the new headlines
+    db.Headline.find({})
+        // Return the new headlines
+        .then(docs => res.json(docs))
 
-                // There was an error deleting the old headlines
-                .catch(err => res.status(500).json(err));
-        })
-        .catch(function (err) {
-            // There was an error with Axios, set the response status to 500 and return the error as a JSON object
-            res.status(500).json(err);
-        });
+        // There was an error getting the headlines
+        .catch(err => res.status(500).json(err));
+});
+
+// Saving an article
+app.post("/saved/:id", function (req, res) {
+    db.Headline.findOneAndUpdate(
+        {
+             "_id": req.params.id 
+        }, 
+        { 
+            "saved": true 
+        }, 
+        function (err, doc) {
+        // Log any errors
+        if (err) {
+            console.log(err);
+        } else {
+            // Or send the user back to the all articles page once saved
+            res.redirect("/saved");
+        }
+    })
 });
 
 
-/* app.put("/headline/:id", function (req, res) {
-    db.Headline.updateOne{
-
-    }
-}); */
 
 // Start the server
 app.listen(PORT, function () {
