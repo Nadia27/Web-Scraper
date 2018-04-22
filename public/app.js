@@ -35,7 +35,7 @@ $(document).on("click", ".saved", function () {
     var thisId = $(this).attr("data-id");
     console.log(thisId);
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "/saved/" + thisId
     });
 });
