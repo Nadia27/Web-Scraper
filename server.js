@@ -1,26 +1,28 @@
 //
 //Dependencies=====================================
-var express = require("express");
-var bodyParser = require("body-parser");
-var mongoose = require("mongoose");
-var logger = require("morgan");
-var request = require("request");
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const logger = require("morgan");
+const request = require("request");
+const Headline = require("./models/Headline.js")
 //==================================================
 
 //
 //Scraping=========================================
 //Axios promised based http library
-var axios = require("axios");
-var cheerio = require("cheerio");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 //
 //Require models ==========================================
-var db = require("./models");
+const db = require("./models");
 
-var PORT = 3001;
+
+const PORT = 3001;
 
 //intialize Express 
-var app = express();
+const app = express();
 
 // Set the app up with morgan.
 // morgan is used to log our HTTP Requests.
@@ -52,6 +54,8 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoresults";
 app.get("/", function (req, res) {
     res.send(index.html);
 });
+
+
 
 
 //Scrape Stories from Good News Site 
@@ -87,28 +91,28 @@ app.get('/scrape', function (req, res) {
             console.log(results);
             //Now that I have the scraped headlines...put into db
              // Remove all headlines that exist
-                db.Headline.remove()
+                 db.Headline.remove()
                 .then(() => {
                     // Insert the new headlines
-            db.Headline.insertMany(results)
+                db.Headline.insertMany(results)
                 .then(() => {
                     console.log(results); 
-                }).catch(function(err){
+                }).catch(function(err) {
                     return res.json(err);
                 });
                 res.send("Scrape Complete");
-                    // Get the new headlines
+                    
+                }); 
+        });
+    }); 
+
+        // Get the new headlines
                     /* db.Headline.find()
                         // Return the new headlines
                         .then(docs => res.json(docs))
     
                         // There was an error getting the headlines
                         .catch(err => res.status(500).json(err)); */
-                });
-    
-    
-    });
-        }); 
 
 
 // Getting the articles we scraped from the mongoDB
@@ -140,7 +144,7 @@ app.post("/saved/:id", function (req, res) {
             // Or send the user back to the all articles page once saved
             res.redirect("/saved");
         }
-    })
+    });
 });
 
 
