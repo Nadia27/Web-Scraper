@@ -12,7 +12,7 @@ function displayResults(data) {
                         <p class="card-text url">${headline.url}</p>
                         <button type="button" class="btn btn-primary saved" 
                         data-toggle="modal" data-target="#exampleModal" 
-                         data-id=${headline._id}>Save Headline</button>
+                        data-id=${headline._id}>Save Headline</button>
                         </div>
                         </div>`);
     });
@@ -42,13 +42,14 @@ $(document).on("click", ".saved", function () {
 
 
 
-/*  //When Saved Articles button press grab all saved headlines
+//When Saved Articles button press grab all saved headlines
 $("#saved").on("click", function() {
     //change saved column in db to true for
-    console.log("grabbing all saved articles!"); 
+    console.log("grabbing all saved articles!");
+
    
 }); 
- */
+
 
 
 // Load read books and render them to the screen

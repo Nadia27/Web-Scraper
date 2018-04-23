@@ -106,15 +106,7 @@ app.get('/scrape', function (req, res) {
         });
     }); 
 
-        // Get the new headlines
-                    /* db.Headline.find()
-                        // Return the new headlines
-                        .then(docs => res.json(docs))
-    
-                        // There was an error getting the headlines
-                        .catch(err => res.status(500).json(err)); */
-
-
+      
 // Getting the articles we scraped from the mongoDB
 app.get("/articles", function (req, res) {
     // grab every doc in the Articles array
@@ -146,6 +138,24 @@ app.post("/saved/:id", function (req, res) {
         }
     });
 });
+
+// Showing saved articles
+app.get("/saved", function (req, res) {
+    // Grab every saved article in Articles db
+    Headline.find(
+        { 
+            "saved": true 
+        }, function (err, doc) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("saved", {
+                allHeadlines: doc
+            });
+        }
+    });
+});
+
 
 
 
