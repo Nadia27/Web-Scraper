@@ -21,12 +21,12 @@
   "homepage": "https://github.com/Nadia27/Web-Scraper#readme",
   "dependencies": {
     "axios": "^0.18.0",
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.2",
-    "express": "^4.16.3",
-    "express-handlebars": "^3.0.0",
-    "hoek": "^5.0.3",
-    "mongojs": "^2.5.0",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "hoek": "^5.0.4",
+    "mongojs": "^2.6.0",
     "mongoose": "^5.4.20",
     "morgan": "^1.9.1",
     "request": "^2.88.0"
