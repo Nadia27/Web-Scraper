@@ -21,13 +21,13 @@ const db = require("./models");
 
 const PORT = process.env.PORT || 3001;
 
-//intialize Express 
+//intialize Express
 const app = express();
 
 // Set the app up with morgan.
 // morgan is used to log our HTTP Requests.
 //Concise output colored by response status for development use
-//package will return color coded error codes and uncolored for other codes  
+//package will return color coded error codes and uncolored for other codes
 app.use(logger("dev"));
 // Setup the app with body-parser and a static folder
 app.use(
@@ -42,7 +42,7 @@ app.use(express.static("public"));
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/mongoresults");
+mongoose.connect("mongodb://localhost/mongoresults", { useUnifiedTopology: true, useNewUrlParser: true  });
 // If deployed, use the deployed database. Otherwise use the local mongoresults database
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoresults";
 
@@ -58,7 +58,7 @@ app.get("/", function (req, res) {
 
 
 
-//Scrape Stories from Good News Site 
+//Scrape Stories from Good News Site
 // A GET route for scraping the goodnews website
 app.get('/scrape', function (req, res) {
     // First, we grab the body of the html with request
@@ -96,17 +96,17 @@ app.get('/scrape', function (req, res) {
                     // Insert the new headlines
                 db.Headline.insertMany(results)
                 .then(() => {
-                    console.log(results); 
+                    console.log(results);
                 }).catch(function(err) {
                     return res.json(err);
                 });
                 res.send("Scrape Complete");
-                    
-                }); 
-        });
-    }); 
 
-      
+                });
+        });
+    });
+
+
 // Getting the articles we scraped from the mongoDB
 app.get("/articles", function (req, res) {
     // grab every doc in the Articles array
@@ -123,11 +123,11 @@ app.get("/articles", function (req, res) {
 app.post("/saved/:id", function (req, res) {
     db.Headline.findOneAndUpdate(
         {
-             "_id": req.params.id 
-        }, 
-        { 
-            "saved": true 
-        }, 
+             "_id": req.params.id
+        },
+        {
+            "saved": true
+        },
         function (err, doc) {
         // Log any errors
         if (err) {
@@ -143,8 +143,8 @@ app.post("/saved/:id", function (req, res) {
 app.get("/saved", function (req, res) {
     // Grab every saved article in Articles db
     Headline.find(
-        { 
-            "saved": true 
+        {
+            "saved": true
         }, function (err, doc) {
         if (err) {
             console.log(err);
